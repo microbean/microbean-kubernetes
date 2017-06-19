@@ -50,6 +50,24 @@ import okhttp3.OkHttpClient;
  */
 public final class Pods {
 
+
+  /*
+   * Constructors.
+   */
+
+  /**
+   * Creates a new {@link Pods} instance.
+   */
+  private Pods() {
+    super();
+  }
+
+
+  /*
+   * Static methods.
+   */
+  
+
   /**
    * Forwards an arbitrary local port to the supplied {@code
    * remotePort} on the {@linkplain #getFirstReadyPod(Listable) first
