@@ -102,6 +102,10 @@ public final class Pods {
    * conditions documentation</a>
    */
   public static final LocalPortForward forwardPort(final OkHttpClient httpClient, final Listable<? extends PodList> pods, final int remotePort) throws MalformedURLException {
+    return forwardPort(httpClient, pods, remotePort, 0);
+  }
+
+  public static final LocalPortForward forwardPort(final OkHttpClient httpClient, final Listable<? extends PodList> pods, final int remotePort, final int localPort) throws MalformedURLException {
     LocalPortForward returnValue = null;
     if (httpClient != null && pods instanceof OperationSupport) {
       final String urlBase = ((OperationSupport)pods).getNamespacedUrl().toExternalForm();
@@ -111,7 +115,9 @@ public final class Pods {
         final String name = readyPod.getMetadata().getName();
         assert name != null;
         final URL url = new URL(new StringBuilder(urlBase).append("/").append(name).toString());
-        returnValue = new PortForwarderWebsocket(httpClient).forward(url, remotePort);
+        PortForwarderWebsocket portForwarderWebsocket = new PortForwarderWebsocket(httpClient);
+        returnValue = localPort <= 0 ? portForwarderWebsocket.forward(url, remotePort) 
+        : portForwarderWebsocket.forward(url, remotePort, localPort);
       }
     }
     return returnValue;
